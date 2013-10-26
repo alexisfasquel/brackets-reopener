@@ -7,10 +7,13 @@ An extension for [Brackets](https://github.com/adobe/brackets/) allowing you to 
 3. Click on the **Install** button.
 
 ### How to Use Extension
-After closing one or more working files, you can reopen them through **Brackets > File > Reopen Closed Files...** or by using the combinaison of keys : **⌥⌘W (option + command + W)**
+After closing one or more working files, you can reopen them through :
+- **Brackets > File > Reopen Closed Files...**
+- Or by using the combinaison of keys : **⌥⌘W (option + command + W)**
 
 ### Known Issues
-None for now
+- Reopen file in wrong 'working space' if changing project folder after closing a file
+- Reopen will stop any changes bactracking
 
 ### License
 GNU GPL
