@@ -1,0 +1,20 @@
+{
+    "name": "brackets-reopener",
+    "title": "Reopener",
+    "version": "1.0.0",
+    "description": "",
+    "homepage": "https://github.com/lkcampbell/brackets-ruler",
+    "author": "Alexis FASQUEL alexis.fsq@gmail.com (https://github.com/afasquel)",
+    "license": "GPL",
+    "categories":"general",
+    "keywords": [
+        "reopen"
+    ],
+    "files": [
+        "main.js",
+        "README.md"
+    ],
+    "engines": {
+        "brackets": ">=0.20.0"
+    }
+}
