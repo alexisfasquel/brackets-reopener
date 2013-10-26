@@ -13,7 +13,6 @@ After closing one or more working files, you can reopen them through :
 
 ### Known Issues
 - Reopen file in wrong 'working space' if changing project folder after closing a file
-- Reopen will stop any changes bactracking
 
 ### License
 GNU GPL
