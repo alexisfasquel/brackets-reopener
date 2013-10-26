@@ -1,4 +1,4 @@
-# Indent Guides for Brackets
+# Reopener for Brackets
 An extension for [Brackets](https://github.com/adobe/brackets/) allowing you to reopen recent closed files.
 
 ### How to Install
