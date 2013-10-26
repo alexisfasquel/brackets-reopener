@@ -1,15 +1,28 @@
 {
     "name": "brackets-reopener",
+    
     "title": "Reopener",
-    "version": "1.0.0",
-    "description": "",
-    "homepage": "https://github.com/lkcampbell/brackets-ruler",
-    "author": "Alexis FASQUEL alexis.fsq@gmail.com (https://github.com/afasquel)",
-    "license": "GPL",
+    "description": "Adding the possibility to quicly reopen closed files",
+    "keywords": ["reopen"],
     "categories":"general",
-    "keywords": [
-        "reopen"
-    ],
+    "version": "1.0.0",
+    "license": "GNU/GPL",
+    
+    "homepage": "https://github.com/alexisfasquel/brackets-reopener",
+    "author": {
+        "name": "Alexis FASQUEL",
+        "email": "alexis.fsq@gmail.com",
+        "url": "https://github.com/alexisfasquel"
+    },    
+    
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/alexisfasquel/brackets-reopener.git"
+    },
+    "bugs": {
+        "url": "https://github.com/alexisfasquel/brackets-reopener/issues",
+        "email": "alexis.fsq@gmail.com"
+    },
     "files": [
         "main.js",
         "README.md"
