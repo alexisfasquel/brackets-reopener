@@ -12,7 +12,7 @@ After closing one or more working files, you can reopen them through :
 - Or by using the combinaison of keys : **⌥⌘W (option + command + W)**
 
 ### Known Issues
-- Reopen file in wrong 'working space' if changing project folder after closing a file
+None for now
 
 ### License
 GNU GPL
