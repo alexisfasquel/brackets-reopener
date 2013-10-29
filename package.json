@@ -3,7 +3,7 @@
     
     "title": "Reopener",
     "description": "Adding the possibility to quicly reopen closed files",
-    "keywords": ["reopen"],
+    "keywords": ["reopen", "open"],
     "categories":"general",
     "version": "1.0.0",
     "license": "GNU/GPL",

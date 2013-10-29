@@ -12,7 +12,7 @@ After closing one or more working files, you can reopen them through :
 - Or by using the combinaison of keys : **⌥⌘W (option + command + W)**
 
 ### Known Issues
-None for now
+None for now : please report any issue or enhancement matter :D
 
 ### License
 GNU GPL
