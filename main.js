@@ -15,6 +15,9 @@ define(function (require, exports, module) {
     "use strict";
 
     
+    
+    //TODO ?? Create list as the Working Files set where we store opened standelone files ?
+    
     //Definistion of the size of the stack
     var MAX_LENGHT = 10;
     
@@ -249,17 +252,20 @@ define(function (require, exports, module) {
     var command = CommandManager.register(REOPEN_CMD_TEXT, REOPEN_CMD_ID, _reopen);
     var menu = Menus.getMenu(Menus.AppMenuBar.FILE_MENU);
 	menu.addMenuItem(REOPEN_CMD_ID, REOPEN_CMD_KEY, Menus.AFTER, Commands.FILE_CLOSE_ALL);
+    
     //TODO COMMENT !!
-    command = CommandManager.register(RECENT_TITLE_TEXT, RECENT_TITLE_CMD, _openRecent);
+    /*command = CommandManager.register(RECENT_TITLE_TEXT, RECENT_TITLE_CMD, _openRecent);
     command.setEnabled(false);
     menu.addMenuItem(RECENT_TITLE_CMD, '', Menus.AFTER, REOPEN_CMD_ID);
     menu.addMenuDivider(Menus.BEFORE, RECENT_TITLE_CMD);
-    
+    */
 
     
     
     AppInit.appReady(function () {
-        _initRecents();
+        //_initRecents();
+        
+        
         //Listening for project opening (at least one when the root project is opened)
         $(ProjectManager).on("projectOpen", _reinit);
         
@@ -267,10 +273,10 @@ define(function (require, exports, module) {
         $(DocumentManager).on("workingSetRemove", _saveClosedFiles);
         $(DocumentManager).on("workingSetRemoveList", _saveClosedFiles);
         
-        $(DocumentManager).on("workingSetAdd", _addRecent);
+        //$(DocumentManager).on("workingSetAdd", _addRecent);
         
         
-        $(ProjectManager).on("beforeAppClose", _saveRecents);
+        //$(ProjectManager).on("beforeAppClose", _saveRecents);
     });
 
 });
