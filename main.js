@@ -39,13 +39,9 @@ define(function (require, exports, module) {
         PreferencesManager  = brackets.getModule("preferences/PreferencesManager"),
         AppInit             = brackets.getModule("utils/AppInit");
     
-    //TODO Use the CollectionUtils module and the indexOf function instead of looping ?
     
-    
-    //TODO How to store the _recentStandelones array as a JSON object
-    
-    var _defPrefs           = "",
-        _prefs              = PreferencesManager.getPreferenceStorage(module, null);
+    // Getting PreferenceStorage
+    var _prefs = PreferencesManager.getPreferenceStorage(module, null);
     
     
     
@@ -59,6 +55,11 @@ define(function (require, exports, module) {
 
     
     
+    /**
+     * 
+     * TODO Comments
+     * @param {?string} event - which is either "workingSetRemove" or "workingSetRemoveList"
+     */
     function _removeDuplicate(fileEntries) {
         
         var i, j;
@@ -86,11 +87,13 @@ define(function (require, exports, module) {
             }
         } else {    //One file only...
             for (i = 0; i < _closedFiles.length; i++) {
-                if (_closedFiles[i].fullPath === fileEntries[i].fullPath) {
-                    //Found the duplicate, removing it and moving on
-                    _closedFiles.splice(i, 1);
-                    break;
-                }
+                try {
+                    if (_closedFiles[i].fullPath === fileEntries[i].fullPath) {
+                        //Found the duplicate, removing it and moving on
+                        _closedFiles.splice(i, 1);
+                        break;
+                    }
+                } catch (e) { }
             }
         }
         
@@ -107,7 +110,14 @@ define(function (require, exports, module) {
      */
     function _saveClosedFiles(event, newClosedFiles) {
         
-        // First removing duplicate if there is one
+        // If new file (no fullPath) don't add!
+        try {
+			if (newClosedFiles.fullPath.substring(0, 10) === "/_brackets") {
+                return;
+            }
+		} catch (e) { } // In case it's a list, then it can't be a new file
+		
+        // Removing duplicate if there is one
         _removeDuplicate(newClosedFiles);
         // Then pushing in the stack
         _closedFiles.push(newClosedFiles);
@@ -145,7 +155,7 @@ define(function (require, exports, module) {
     }
 
     /**
-     * 
+     *  TODO Comment
      */
     function _reinit() {
         _closedFiles = new Array();
@@ -154,71 +164,59 @@ define(function (require, exports, module) {
     
     
     
-    
-    
-    
     /**
      * Reopen the last closed file(s)
      */
     function _openRecent() {
-        var menu = Menus.getMenu(Menus.AppMenuBar.FILE_MENU);
         var commandId = (this).getID();
         var i;
         for (i = 0; i < _recentStandelones.length; i++) {
             if (_recentStandelones[i].cmd === commandId) {
                 FileViewController.addToWorkingSetAndSelect(_recentStandelones[i].fullPath, FileViewController.WORKING_SET_VIEW);
-                menu.removeMenuItem(_recentStandelones[i].cmd);
-                var removed = _recentStandelones.splice(i, 1)[0];
-                menu.addMenuItem(removed.cmd, "", Menus.AFTER, RECENT_TITLE_CMD);
-                _recentStandelones.push(removed);
                 break;
             }
         }
     }
     
     /**
-     *  TODO: MAnage if fullPath does not exists (new file)
+     *  TODO: Comment
      */
-    function _addRecent(FileEntry) {
+    function _addRecent(event, FileEntry) {
         var menu = Menus.getMenu(Menus.AppMenuBar.FILE_MENU);
         
+        // First thing first, if new file (no fullPath) or within project, don't add!
+        if (ProjectManager.isWithinProject(FileEntry.fullPath) || FileEntry.fullPath.substring(0, 10) === "/_brackets") {
+            return;
+        }
+        
+        // Converting to FileEntry to a "RecentStandelone Object"
         var standelone = {
             fullPath: FileEntry.fullPath,
             cmd: RECENT_CMD_BASE_ID + FileEntry.name,
             name: "\ud83d\udcc4  " + FileEntry.name
         };
         
-        _recentStandelones.push(standelone);
-        
-        if (_recentStandelones.length > 5) {
-            var removed = _recentStandelones.shift();
-            menu.removeMenuItem(removed.cmd);
-            //TODO Unregister command ?
-        }
-        
-        CommandManager.register(standelone.name, standelone.cmd, _openRecent);
-        menu.addMenuItem(standelone.cmd, "", Menus.AFTER, RECENT_TITLE_CMD);
-    }
-    
-    
-    /**
-     * TODO COMMENT !!
-     */
-    function _checkForDuplicatesAndStandalones(event, addedFile) {
-        
+        // Removing duplicate if there is one
         var i;
-        for (i = 0; i < _closedFiles.length; i++) {
-            if (_closedFiles[i].fullPath === addedFile.fullPath) {
-                _closedFiles.splice(i, 1);
+        for (i = 0; i < _recentStandelones.length; i++) {
+            if (standelone.fullPath === _recentStandelones[i].fullPath) {
+                menu.removeMenuItem(_recentStandelones[i].cmd);
+                _recentStandelones.splice(i, 1);
                 break;
             }
         }
-        if (_closedFiles.length === 0) {
-            CommandManager.get(REOPEN_CMD_ID).setEnabled(false);
-        }
+        // Then pushing in the stack
+        _recentStandelones.push(standelone);
         
-        if (!ProjectManager.isWithinProject(addedFile.fullPath)) {
-            _addRecent(addedFile);
+        // Registering command and adding MenuItem
+        CommandManager.register(standelone.name, standelone.cmd, _openRecent);
+        menu.addMenuItem(standelone.cmd, "", Menus.AFTER, RECENT_TITLE_CMD);
+        
+        // The stack is crowded ? 
+        if (_recentStandelones.length > 5) {
+            var removed = _recentStandelones.shift(); // Kill someone, again!
+            menu.removeMenuItem(removed.cmd);
+            //TODO Unregister command ?
         }
     }
     
@@ -247,7 +245,6 @@ define(function (require, exports, module) {
     }
     
     
-    
     // Register command and add it to the menu.
     var command = CommandManager.register(REOPEN_CMD_TEXT, REOPEN_CMD_ID, _reopen);
     var menu = Menus.getMenu(Menus.AppMenuBar.FILE_MENU);
@@ -258,21 +255,22 @@ define(function (require, exports, module) {
     menu.addMenuItem(RECENT_TITLE_CMD, '', Menus.AFTER, REOPEN_CMD_ID);
     menu.addMenuDivider(Menus.BEFORE, RECENT_TITLE_CMD);
     
-    
-    //TODO COMMENT !!
-    $(DocumentManager).on("workingSetRemove", _saveClosedFiles);
-    $(DocumentManager).on("workingSetRemoveList", _saveClosedFiles);
-    
-    $(DocumentManager).on("workingSetAdd", _checkForDuplicatesAndStandalones);
-    
-    //Listening for project opening (at least one when the root project is opened)
-    $(ProjectManager).on("projectOpen", _reinit);
-    
-    $(ProjectManager).on("beforeAppClose", _saveRecents);
+
     
     
     AppInit.appReady(function () {
         _initRecents();
+        //Listening for project opening (at least one when the root project is opened)
+        $(ProjectManager).on("projectOpen", _reinit);
+        
+        //TODO COMMENT !!
+        $(DocumentManager).on("workingSetRemove", _saveClosedFiles);
+        $(DocumentManager).on("workingSetRemoveList", _saveClosedFiles);
+        
+        $(DocumentManager).on("workingSetAdd", _addRecent);
+        
+        
+        $(ProjectManager).on("beforeAppClose", _saveRecents);
     });
 
 });
