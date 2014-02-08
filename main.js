@@ -1,14 +1,3 @@
-/*!
-     * Brackets Git Extension
- *
- * @author Martin Zagora
- * @license http://opensource.org/licenses/MIT
- */
-
-/*jslint vars: true, plusplus: true, devel: true, nomen: true, regexp: true, indent: 4, maxerr: 50 */
-/*global define, $, brackets, window */
-
-
 //TODO Handle 2 files with same name in recent files list (add the folder => \ud83d\udcc1)
 /** Simple extension that adds a "File > Hello World" menu item */
 define(function (require, exports, module) {
