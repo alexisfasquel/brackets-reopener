@@ -2,7 +2,7 @@
     "name": "brackets-reopener",
     
     "title": "Reopener",
-    "description": "Adding the possibility to quicly reopen closed files",
+    "description": "Adding the possibility to quickly reopen closed files",
     "keywords": ["reopen", "open"],
     "categories":"general",
     "version": "1.0.0",
